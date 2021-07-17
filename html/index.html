@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <title>eelテスト</title>
+        <link rel="stylesheet" href="./css/style.css">
+    </head>
+    <body>
+        <main>
+            <h2>eelテスト</h2>
+
+            <form class="searchform">
+                <label for="filename">ＣＳＶファイル名：</label> 
+                <input type="text" id="filename">.csv<br>
+                <p id="atentionf" class="atention">※ファイル名を入力して下さい。</p>
+
+                <label for="keyword">検索キーワード：</label>
+                <input type="text" id="keyword">
+                <p id="atentionw" class="atention">※検索キーワードを入力して下さい。</p>
+                
+                <label for="filepath">ファイルの保存場所：</label>
+                <input type="text" class="" id="filepath">
+                <input type="button" class="button" value="検索" id="search" disabled onclick="search_btn_click()">
+                <!-- <input type="button" class="button" value=" 保存 " onclick="save_file()">  -->
+                <p id="atentionp" class="atention">※保存先のパスを入力して下さい。</p>
+
+                <label for="result">検索結果：</label>
+                <textarea id="result" cols="30" rows="5"></textarea>
+                <input type="button" class="button" id="btn_close" value="閉じる" onclick="window.close()">
+
+            </form>
+        </main>
+
+        <script type="text/javascript" src="/eel.js"></script>
+        <script>
+          
+          //ファイル名のテキストボックスに最初からフォーカス
+          filename.focus();
+
+          //テキストボックス入力チェック関数
+          //ファイル名と検索キーワードの両方が入力されたら
+          //検索ボタンを有効にする
+          function inputcheck(){
+            filename_len = filename.value.length;
+            keyword_len = keyword.value.length;
+            filepath_len = filepath.value.length;
+            if ((filename_len >= 1) && (keyword_len >= 1) && (filepath_len >=1)){
+              search.disabled = false;
+            }
+          }
+
+          //テキストボックスにイベント設定
+          //ファイル名が入力されているか
+          filename.addEventListener('keyup',function(){
+            if (filename.value.length >= 1) {
+              atentionf.style.visibility="hidden";
+              inputcheck();
+            } else {
+              atentionf.style.visibility="visible";
+            }
+          },false);
+
+          //検索キーワードが入力されているか
+          keyword.addEventListener('keyup',function(){
+            if (keyword.value.length >= 1) {
+              atentionw.style.visibility = "hidden";
+              inputcheck();
+            } else {
+              atentionw.style.visibility = "visible";
+            }
+          },false);
+          
+          //保存先のパスが入力されているか
+          filepath.addEventListener('keyup',function(){
+            if (filepath.value.length >= 1) {
+              atentionp.style.visibility = "hidden";
+              inputcheck();
+            } else {
+              atentionp.style.visibility = "visible";
+            }
+          },false);
+
+          //検索ボタンクリック　で　実行
+          function search_btn_click(){
+            async function run() {
+              var kekka = await eel.kimetsu_search(filename.value+".csv", keyword.value, filepath.value)();
+              result.value += kekka + "\n" ;
+              }
+            run();
+          }
+              /*search.addEventListener('click', () => {
+            })*/
+
+            eel.expose(view_log_js)
+            function view_log_js(text){
+            }
+
+          </script>
+    </body>
+</html>
